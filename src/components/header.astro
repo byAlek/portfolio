@@ -1,0 +1,47 @@
+---
+type Props = { class?: string }
+
+const { class: c } = Astro.props
+---
+
+<header
+  id="header"
+  data-on-top="true"
+  data-visible="true"
+  class:list={[
+    'layout fill-mode-forwards fixed inset-x-0 top-0 z-50 h-12 rounded-full border border-transparent transition-[background-color,top,padding,border,backdrop-filter,box-shadow] duration-500 lg:h-20',
+    'data-[on-top=false]:bg-card/70 data-[on-top=false]:border-border/30 data-[on-top=false]:top-4 data-[on-top=false]:px-2 data-[on-top=false]:shadow-md/20 data-[on-top=false]:backdrop-blur-md lg:data-[on-top=false]:px-5',
+    'data-[visible=true]:animate-in data-[visible=true]:fade-in-0 data-[visible=true]:slide-in-from-top-50 data-[visible=true]:blur-in-lg data-[visible=true]:zoom-in-90 lg:data-[visible=true]:zoom-in-95',
+    'data-[visible=false]:animate-out data-[visible=false]:fade-out-0 data-[visible=false]:slide-out-to-top-50 data-[visible=false]:blur-out-lg data-[visible=false]:zoom-out-90 lg:data-[visible=false]:zoom-out-95',
+    c,
+  ]}
+>
+  <slot />
+</header>
+
+<script>
+  import throttle from 'lodash.throttle'
+
+  function init() {
+    const header = document.getElementById('header')
+
+    let lastScroll = 0
+
+    function onScroll() {
+      if (!header) return
+
+      const currentScroll = window.pageYOffset
+
+      header.dataset.onTop = String(currentScroll === 0)
+
+      if (currentScroll > 500) header.dataset.visible = String(currentScroll < lastScroll)
+      else header.dataset.visible = 'true'
+
+      lastScroll = currentScroll
+    }
+    const throttledScroll = throttle(onScroll, 50)
+
+    window.addEventListener('scroll', throttledScroll, { passive: true })
+  }
+  document.addEventListener('astro:page-load', () => init())
+</script>

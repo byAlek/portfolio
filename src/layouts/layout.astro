@@ -1,0 +1,78 @@
+---
+import '@/global.css'
+import { ClientRouter, fade } from 'astro:transitions'
+
+import Background from '@/components/background.astro'
+import { HeaderButtons } from '@/components/header-buttons'
+import Header from '@/components/header.astro'
+import { Link } from '@/components/ui/link'
+import { defaultLocale } from '@/lib/i18n'
+import type { ThemeCookie } from '@/lib/theme'
+import type { Translations } from '@/types/translations'
+
+const themeCookie = Astro.cookies.get('theme')
+const theme = themeCookie && (JSON.parse(themeCookie.value) as ThemeCookie)
+const themeClass = theme ? `${theme.color}-${theme.mode}` : ''
+
+function formatLocale(locale: string) {
+  const [lang, region] = locale.split('-')
+
+  return region ? `${lang.toLowerCase()}-${region.toUpperCase()}` : lang.toLowerCase()
+}
+
+const locale = Astro.currentLocale || defaultLocale
+
+interface Props {
+  title: string
+  class?: string
+  t: Translations
+}
+
+const { title, class: className, t } = Astro.props
+---
+
+<!doctype html>
+<html lang={formatLocale(locale)} class={themeClass}>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <ClientRouter />
+  </head>
+  <body>
+    <Background />
+
+    <Header class="flex items-center justify-between gap-2 lg:gap-4">
+      <p class="title hidden sm:block">Alex Dev</p>
+      <nav class="flex flex-wrap gap-2 sm:justify-center lg:gap-4">
+        <Link variant="ghost" size="sm" href="#projects" className="lg:h-10 lg:px-6 lg:text-sm">
+          {t.button.projects}
+        </Link>
+        <Link variant="ghost" size="sm" href="#contact" className="lg:h-10 lg:px-6 lg:text-sm">
+          {t.button.contact}
+        </Link>
+      </nav>
+      <HeaderButtons client:load locale={locale} />
+    </Header>
+
+    <main class={className} transition:animate={fade({ duration: '0.2s' })}>
+      <slot />
+    </main>
+  </body>
+</html>
+
+<script>
+  import { initScrollLock } from '@/lib/scroll-lock'
+  import { initTheme } from '@/lib/theme'
+
+  initTheme()
+  initScrollLock()
+</script>

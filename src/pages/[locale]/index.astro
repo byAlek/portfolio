@@ -1,0 +1,264 @@
+---
+import { ProjectModal } from '@/components/project-modal'
+import { ProjectsCarousel } from '@/components/projects-carousel'
+import { Clipboard } from '@/components/ui/clipboard'
+import { Linkedin } from '@/components/ui/icons'
+import { Link } from '@/components/ui/link'
+import { Title } from '@/components/ui/title'
+import { EMAIL, LOCATION, PHONE, SOCIALS } from '@/constants/common'
+import { PROJECTS } from '@/constants/projects'
+import { SKILLS_BACK_END, SKILLS_FRONT_END, SKILLS_STYLES } from '@/constants/skills'
+import Layout from '@/layouts/layout.astro'
+import { defaultLocale } from '@/lib/i18n'
+import type { Translations } from '@/types/translations'
+import { Code, Github, Internet, Mail, MapPin, NavArrowDown, Phone } from 'iconoir-react'
+
+const locale = Astro.params.locale || defaultLocale
+
+const translations = await import(`../../translations/${locale}.ts`)
+const t = translations[locale.replace('-', '_')] as Translations
+---
+
+<Layout title="ga" class="space-y-16 lg:space-y-28" t={t}>
+  <section class="layout min-h-svh content-center space-y-8 pt-22 pb-4 lg:pt-24">
+    <h2 class="title relative sm:hidden">Alex Dev</h2>
+    <h1 class="title-primary md:hidden">Front-end Developer</h1>
+
+    <div class="flex items-center justify-between gap-4 gap-x-20">
+      <h1 class="title-primary hidden md:block">Front-end</h1>
+      <Link size="xl" className="group relative flex md:grow lg:max-w-3/10" href="#projects">
+        {t.button.go_to_projects}
+        <NavArrowDown
+          className="text-primary group-hover:animate-in group-hover:fade-in-0 group-hover:slide-in-from-top-50 absolute inset-x-0 top-full mx-auto size-6 opacity-0 duration-200 group-hover:opacity-100"
+        />
+      </Link>
+    </div>
+
+    <div class="flex items-center justify-between gap-4 text-balance">
+      <p set:html={t.section_1.description} />
+      <h2 class="title-primary hidden md:block">Developer</h2>
+    </div>
+
+    <footer class="mt-16 flex flex-wrap items-center gap-4 md:justify-center">
+      <Link variant="secondary" href={SOCIALS.github} target="_blank" rel="noopener noreferrer">
+        <Github className="fill-current" />
+        Github
+      </Link>
+      <Link variant="secondary" href={SOCIALS.linkedin} target="_blank" rel="noopener noreferrer">
+        <Linkedin />
+        Linkedin
+      </Link>
+    </footer>
+
+    <Link
+      href="#carousel"
+      variant="ghost"
+      className="absolute inset-x-0 bottom-4 mx-auto w-fit"
+      size="icon-lg"
+    >
+      <NavArrowDown className="animate-[slideFade_3s_ease-in-out_infinite]" />
+    </Link>
+  </section>
+
+  <section id="carousel">
+    <ProjectsCarousel client:load t={t} />
+  </section>
+
+  <section class="layout space-y-4 md:space-y-8">
+    <header>
+      <Title render="h2" className="mb-2">
+        {t.section_2.title}
+      </Title>
+      <p set:html={t.section_2.subtitle} />
+      <p set:html={t.section_2.subtitle_2} />
+    </header>
+    <div class="flex gap-4 lg:gap-8">
+      <ul class="space-y-4 md:w-2/3 lg:space-y-8">
+        <li class="card">
+          <h3 class="title">Front-end</h3>
+          <p class="text-sm font-semibold">
+            {SKILLS_FRONT_END.join(' / ')}
+          </p>
+        </li>
+
+        <li class="flex items-center gap-4">
+          <div class="card grow md:max-w-2/3">
+            <h3 class="title">Styles</h3>
+            <p class="text-sm font-semibold">
+              {SKILLS_STYLES.join(' / ')}
+            </p>
+          </div>
+
+          <Link href={SOCIALS.linkedin} customVariant={1} className="relative mr-4 md:mx-auto">
+            <Linkedin />
+          </Link>
+        </li>
+
+        <li class="card lg:max-w-8/10">
+          <h3 class="title">Back-end</h3>
+          <p class="text-sm font-semibold">
+            {SKILLS_BACK_END.join(' / ')}
+          </p>
+        </li>
+
+        <p set:html={t.section_2.description} class="max-w-lg" />
+      </ul>
+
+      <div class="bg-primary hidden flex-1 items-center justify-center rounded-4xl md:flex">
+        <p class="text-primary-foreground text-center text-[200px]">:)</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="layout space-y-4 md:space-y-8">
+    <Title render="h2">
+      {t.button.projects}
+    </Title>
+    <div class="flex flex-col gap-24">
+      {
+        PROJECTS(t.projects).map((project, i) => (
+          <article
+            id={project.id}
+            class="flex w-full flex-wrap gap-4 pt-4 md:flex-nowrap md:even:*:data-even-child:order-first lg:gap-8"
+          >
+            <header class="space-y-2 md:hidden">
+              <h2 class="title">{project.name}</h2>
+              <ul class="flex flex-wrap gap-2">
+                {project.skills_used.map((skill) => (
+                  <li>
+                    <p class="rounded-full border px-3 py-1 text-xs font-semibold">{skill}</p>
+                  </li>
+                ))}
+              </ul>
+            </header>
+            <div class="space-y-1 md:hidden">
+              <p set:html={project.description} />
+              {project.description_2 && <p set:html={project.description_2} />}
+              {project.comment && <p set:html={project.comment} />}
+            </div>
+
+            <ProjectModal client:visible project={project} />
+
+            <div
+              data-even-child
+              class="mr-auto flex basis-full flex-col justify-center gap-4 md:max-w-lg md:basis-1/2"
+            >
+              <header class="hidden space-y-2 md:block">
+                <h2 class="title">{project.name}</h2>
+                <ul class="flex flex-wrap gap-2">
+                  {project.skills_used.map((skill) => (
+                    <li>
+                      <p class="rounded-full border px-3 py-1 text-xs font-semibold">{skill}</p>
+                    </li>
+                  ))}
+                </ul>
+              </header>
+              <div class="hidden space-y-1 md:block">
+                <p set:html={project.description} />
+                {project.description_2 && <p set:html={project.description_2} />}
+                {project.comment && <p set:html={project.comment} />}
+              </div>
+              <footer class="flex gap-4 *:basis-2/10">
+                {project.repo && (
+                  <Link
+                    variant="outline"
+                    href={project.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {t.button.go_to_code}
+                    <Code class="size-5" />
+                  </Link>
+                )}
+                {project.link && (
+                  <Link href={project.link} target="_blank" rel="noopener noreferrer">
+                    {t.button.go_to_website}
+                    <Internet />
+                  </Link>
+                )}
+              </footer>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section id="contact" class="layout grid gap-x-4 gap-y-8 py-4 sm:grid-cols-2">
+    <div class="space-y-4">
+      <Title render="h2">{t.button.contact}</Title>
+      <div class="*:flex *:items-center *:gap-2">
+        <div class="group/clipboard-button">
+          <Mail />
+          <p class="cursor-default select-all">{EMAIL}</p>
+          <Clipboard valueToCopy={EMAIL} client:visible />
+        </div>
+        <div class="group/clipboard-button">
+          <Phone />
+          <p class="cursor-default select-all">{PHONE}</p>
+          <Clipboard valueToCopy={PHONE} client:visible />
+        </div>
+        <div>
+          <MapPin />
+          <p>{LOCATION}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative">
+      <p class="flex flex-wrap *:basis-full">
+        <span class="title-primary">Alex</span>
+        <span class="title-primary text-end">Jhordan</span>
+      </p>
+      <p class="text-muted-foreground absolute top-0 right-0 text-xs italic lg:text-base">
+        Front-end
+        <br />
+        Developer
+      </p>
+    </div>
+
+    <footer class="flex justify-center gap-4 sm:col-span-2">
+      <Link
+        variant="secondary"
+        size="lg"
+        href={SOCIALS.github}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Github className="fill-current" />
+        Github
+      </Link>
+      <Link
+        variant="secondary"
+        size="lg"
+        href={SOCIALS.linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Linkedin />
+        Linkedin
+      </Link>
+    </footer>
+  </section>
+</Layout>
+
+<style>
+  @keyframes slideFade {
+    0% {
+      opacity: 0;
+      transform: translateY(-12px);
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    70% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+</style>

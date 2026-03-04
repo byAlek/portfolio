@@ -1,0 +1,38 @@
+---
+import { Particles } from './ui/particles'
+---
+
+<div aria-hidden="true" class="background group pointer-events-none select-none">
+  <div
+    transition:animate="none"
+    class="bg-background animate-out fade-out-0 fill-mode-forwards fixed inset-0 z-300 transition-discrete duration-1000 group-data-is-mounted:hidden"
+  >
+  </div>
+  <div
+    transition:animate="none"
+    class:list={[
+      'fixed inset-0 -z-300 overflow-hidden opacity-7 blur-3xl *:absolute md:opacity-10',
+      '*:bg-primary *:rounded-full',
+    ]}
+  >
+    <div class="top-[10%] -right-120 size-200"></div>
+    <div class="-top-80 -left-80 hidden size-150 md:block"></div>
+    <div class="top-[40%] left-[20%] hidden size-70 md:block"></div>
+    <div class="top-[80%] left-0 size-250 -translate-x-1/2"></div>
+  </div>
+  <Particles
+    transition:animate="none"
+    client:visible
+    quantity={30}
+    size={10}
+    className="text-primary fixed inset-0 -z-200 overflow-hidden opacity-70"
+  />
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    setTimeout(() => {
+      document.querySelector<HTMLDivElement>('.background')!.dataset.isMounted = ''
+    }, 1100)
+  })
+</script>
