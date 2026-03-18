@@ -373,12 +373,6 @@
           "type": "object"
         }
       },
-      "required": [
-        "frontend",
-        "backend",
-        "database",
-        "devops"
-      ],
       "type": "object"
     }
   },
