@@ -3,6 +3,9 @@
   "additionalProperties": false,
   "definitions": {},
   "properties": {
+    "$schema": {
+      "type": "string"
+    },
     "comment": {
       "additionalProperties": false,
       "properties": {
