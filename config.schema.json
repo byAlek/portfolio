@@ -66,311 +66,91 @@
       "additionalProperties": false,
       "properties": {
         "backend": {
-          "additionalProperties": false,
-          "properties": {
-            "express": {
-              "const": "Express",
-              "type": "string"
-            },
-            "fastify": {
-              "const": "Fastify",
-              "type": "string"
-            },
-            "go": {
-              "const": "Golang",
-              "type": "string"
-            },
-            "graphql": {
-              "const": "GraphQL",
-              "type": "string"
-            },
-            "java": {
-              "const": "Java",
-              "type": "string"
-            },
-            "jwt": {
-              "const": "JWT",
-              "type": "string"
-            },
-            "nestjs": {
-              "const": "NestJS",
-              "type": "string"
-            },
-            "node": {
-              "const": "Node.js",
-              "type": "string"
-            },
-            "oauth": {
-              "const": "OAuth 2.0",
-              "type": "string"
-            },
-            "prisma": {
-              "const": "Prisma",
-              "type": "string"
-            },
-            "python": {
-              "const": "Python",
-              "type": "string"
-            },
-            "rest": {
-              "const": "REST APIs",
-              "type": "string"
-            },
-            "websockets": {
-              "const": "WebSockets",
-              "type": "string"
-            }
+          "items": {
+            "enum": [
+              "go",
+              "python",
+              "java",
+              "nodeJs",
+              "express",
+              "nestjs",
+              "fastify",
+              "prisma",
+              "graphQl",
+              "rest",
+              "websockets",
+              "jwt",
+              "oAuth"
+            ],
+            "type": "string"
           },
-          "required": [
-            "go",
-            "python",
-            "java",
-            "node",
-            "express",
-            "nestjs",
-            "fastify",
-            "prisma",
-            "graphql",
-            "rest",
-            "websockets",
-            "jwt",
-            "oauth"
-          ],
-          "type": "object"
+          "type": "array"
         },
         "database": {
-          "additionalProperties": false,
-          "properties": {
-            "mongo": {
-              "const": "MongoDB",
-              "type": "string"
-            },
-            "mysql": {
-              "const": "MySQL",
-              "type": "string"
-            },
-            "postgres": {
-              "const": "PostgreSQL",
-              "type": "string"
-            },
-            "redis": {
-              "const": "Redis",
-              "type": "string"
-            }
+          "items": {
+            "enum": [
+              "postgres",
+              "mySql",
+              "mongo",
+              "redis"
+            ],
+            "type": "string"
           },
-          "required": [
-            "postgres",
-            "mysql",
-            "mongo",
-            "redis"
-          ],
-          "type": "object"
+          "type": "array"
         },
         "devops": {
-          "additionalProperties": false,
-          "properties": {
-            "bun": {
-              "const": "Bun",
-              "type": "string"
-            },
-            "docker": {
-              "const": "Docker",
-              "type": "string"
-            },
-            "eslint": {
-              "const": "ESLint",
-              "type": "string"
-            },
-            "figma": {
-              "const": "Figma",
-              "type": "string"
-            },
-            "git": {
-              "const": "Git",
-              "type": "string"
-            },
-            "github": {
-              "const": "GitHub",
-              "type": "string"
-            },
-            "json": {
-              "const": "JSON",
-              "type": "string"
-            },
-            "markdown": {
-              "const": "Markdown",
-              "type": "string"
-            },
-            "nginx": {
-              "const": "Nginx",
-              "type": "string"
-            },
-            "npm": {
-              "const": "npm",
-              "type": "string"
-            },
-            "nx": {
-              "const": "Nx",
-              "type": "string"
-            },
-            "pnpm": {
-              "const": "pnpm",
-              "type": "string"
-            },
-            "prettier": {
-              "const": "Prettier",
-              "type": "string"
-            },
-            "turbo": {
-              "const": "Turborepo",
-              "type": "string"
-            },
-            "vite": {
-              "const": "Vite",
-              "type": "string"
-            },
-            "vscode": {
-              "const": "VS Code",
-              "type": "string"
-            },
-            "webpack": {
-              "const": "Webpack",
-              "type": "string"
-            },
-            "yaml": {
-              "const": "YAML",
-              "type": "string"
-            },
-            "yarn": {
-              "const": "Yarn",
-              "type": "string"
-            }
+          "items": {
+            "enum": [
+              "nginx",
+              "docker",
+              "git",
+              "github",
+              "vite",
+              "webpack",
+              "eslint",
+              "prettier",
+              "vscode",
+              "figma",
+              "npm",
+              "yarn",
+              "pnpm",
+              "bun",
+              "turbo",
+              "nx",
+              "markdown",
+              "yaml",
+              "json"
+            ],
+            "type": "string"
           },
-          "required": [
-            "nginx",
-            "docker",
-            "git",
-            "github",
-            "vite",
-            "webpack",
-            "eslint",
-            "prettier",
-            "vscode",
-            "figma",
-            "npm",
-            "yarn",
-            "pnpm",
-            "bun",
-            "turbo",
-            "nx",
-            "markdown",
-            "yaml",
-            "json"
-          ],
-          "type": "object"
+          "type": "array"
         },
         "frontend": {
-          "additionalProperties": false,
-          "properties": {
-            "astro": {
-              "const": "Astro",
-              "type": "string"
-            },
-            "axios": {
-              "const": "Axios",
-              "type": "string"
-            },
-            "framer": {
-              "const": "Framer Motion",
-              "type": "string"
-            },
-            "graphql": {
-              "const": "GraphQL",
-              "type": "string"
-            },
-            "javascript": {
-              "const": "JavaScript",
-              "type": "string"
-            },
-            "mui": {
-              "const": "Material UI",
-              "type": "string"
-            },
-            "next": {
-              "const": "Next.js",
-              "type": "string"
-            },
-            "postcss": {
-              "const": "PostCSS",
-              "type": "string"
-            },
-            "react": {
-              "const": "React",
-              "type": "string"
-            },
-            "reactNative": {
-              "const": "React Native",
-              "type": "string"
-            },
-            "redux": {
-              "const": "Redux",
-              "type": "string"
-            },
-            "sass": {
-              "const": "Sass",
-              "type": "string"
-            },
-            "scss": {
-              "const": "SCSS",
-              "type": "string"
-            },
-            "styled": {
-              "const": "Styled Components",
-              "type": "string"
-            },
-            "svelte": {
-              "const": "Svelte",
-              "type": "string"
-            },
-            "tailwind": {
-              "const": "Tailwind CSS",
-              "type": "string"
-            },
-            "typescript": {
-              "const": "TypeScript",
-              "type": "string"
-            },
-            "vue": {
-              "const": "Vue.js",
-              "type": "string"
-            },
-            "zustand": {
-              "const": "Zustand",
-              "type": "string"
-            }
+          "items": {
+            "enum": [
+              "typescript",
+              "javascript",
+              "react",
+              "astro",
+              "redux",
+              "zustand",
+              "vue",
+              "next",
+              "svelte",
+              "graphql",
+              "axios",
+              "reactNative",
+              "scss",
+              "sass",
+              "postcss",
+              "mui",
+              "tailwind",
+              "styled",
+              "framerMotion"
+            ],
+            "type": "string"
           },
-          "required": [
-            "typescript",
-            "javascript",
-            "react",
-            "astro",
-            "redux",
-            "zustand",
-            "vue",
-            "next",
-            "svelte",
-            "graphql",
-            "axios",
-            "reactNative",
-            "scss",
-            "sass",
-            "postcss",
-            "mui",
-            "tailwind",
-            "styled",
-            "framer"
-          ],
-          "type": "object"
+          "type": "array"
         }
       },
       "type": "object"
