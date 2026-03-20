@@ -52,7 +52,6 @@ function applyTheme(color: Colors, mode: Modes, autoMode: boolean) {
 
 function initTheme() {
   const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)')
-  console.log('entrou initTheme')
 
   if (!getThemeCookie()) {
     const mode = prefersDarkScheme.matches ? 'dark' : 'light'

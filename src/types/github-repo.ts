@@ -106,7 +106,7 @@ interface GithubOwner {
   site_admin: boolean
 }
 
-type Translations = { [key in Locale]?: string }
+type Translations = { [key in Locale]: string }
 type Image = { src: string; alt: string }
 
 export interface ProjectConfig {

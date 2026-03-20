@@ -150,15 +150,45 @@ const projects: Project[] = (
         <li class="card">
           <h3 class="title">Front-end</h3>
           <p class="text-sm font-semibold">
-            {Object.values(technologies.frontend).join(' / ')}
+            {
+              (() => {
+                const { frontend: f } = technologies
+                const map = [
+                  f.javascript,
+                  f.typescript,
+                  f.react,
+                  f.next,
+                  f.astro,
+                  f.tailwindcss,
+                  f.zustand,
+                  f.axios,
+                ]
+                return map.join(' / ')
+              })()
+            }
           </p>
         </li>
 
         <li class="flex items-center gap-4">
           <div class="card grow md:max-w-2/3">
-            <h3 class="title">Styles</h3>
+            <h3 class="title">Back-end</h3>
             <p class="text-sm font-semibold">
-              {Object.values(technologies.frontend).join(' / ')}
+              {
+                (() => {
+                  const { backend: b } = technologies
+                  const map = [
+                    b.nodeJs,
+                    b.express,
+                    b.nestjs,
+                    b.fastify,
+                    b.prisma,
+                    b.rest,
+                    b.jwt,
+                    b.oAuth,
+                  ]
+                  return map.join(' / ')
+                })()
+              }
             </p>
           </div>
 
@@ -168,9 +198,27 @@ const projects: Project[] = (
         </li>
 
         <li class="card lg:max-w-8/10">
-          <h3 class="title">Back-end</h3>
+          <h3 class="title">{t.buttons.other}</h3>
           <p class="text-sm font-semibold">
-            {Object.values(technologies.backend).join(' / ')}
+            {
+              (() => {
+                const { database: d, devops: dv } = technologies
+                const map = [
+                  d.postgres,
+                  d.mongo,
+                  d.mySql,
+                  dv.git,
+                  dv.github,
+                  dv.vite,
+                  dv.prettier,
+                  dv.npm,
+                  dv.bun,
+                  dv.turbo,
+                  dv.nx,
+                ]
+                return map.join(' / ')
+              })()
+            }
           </p>
         </li>
 
@@ -197,9 +245,7 @@ const projects: Project[] = (
             class="flex w-full flex-wrap gap-4 pt-4 md:flex-nowrap md:even:*:data-even-child:order-first lg:gap-8"
           >
             <header class="space-y-2 md:hidden">
-              <h2 class="title">
-                <InnerHTML content={project.name} />
-              </h2>
+              <h2 class="title capitalize">{project.name.split('-').join(' ')}</h2>
               <div class="space-y-1">
                 <p>
                   <InnerHTML content={metadata.description[locale]} />
@@ -233,10 +279,10 @@ const projects: Project[] = (
               class="mr-auto flex basis-full flex-col justify-center gap-4 md:max-w-lg md:basis-1/2"
             >
               <header class="hidden space-y-2 md:block">
-                <h2 class="title">{project.name}</h2>
+                <h2 class="title capitalize">{project.name.split('-').join(' ')}</h2>
                 <div class="space-y-1">
                   <p>
-                    <InnerHTML content={metadata.description?.[locale]} />
+                    <InnerHTML content={metadata.description[locale]} />
                   </p>
                   {metadata.comment && (
                     <p>

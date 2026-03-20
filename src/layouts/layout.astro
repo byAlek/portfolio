@@ -54,9 +54,7 @@ const { title, class: className, t } = Astro.props
         if (theme.autoMode) {
           const mode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
           html.classList.add(`${theme.color}-${mode}`)
-          console.log(`${theme.color}-${mode}`)
           setCookie('theme', JSON.stringify({ color: theme.color, mode, autoMode: true }))
-          console.log(theme.autoMode)
           return
         }
 
@@ -107,9 +105,14 @@ const { title, class: className, t } = Astro.props
 </body>
 
 <script>
+  import { locale, type Locale } from '@/lib/i18n'
   import { initScrollLock } from '@/lib/scroll-lock'
   import { initTheme } from '@/lib/theme'
 
   initTheme()
   initScrollLock()
+
+  document.addEventListener('astro:page-load', () => {
+    locale.value = window.location.pathname.split('/')[1] as Locale
+  })
 </script>

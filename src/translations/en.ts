@@ -18,6 +18,7 @@ export const en: Translations = {
     title: 'Contact',
   },
   buttons: {
+    other: 'Other',
     show_more: 'Show more',
     view_projects: 'View projects',
     open_project: 'Open project',

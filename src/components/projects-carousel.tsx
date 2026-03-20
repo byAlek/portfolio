@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'preact/hooks'
 
 import { useMediaQuery } from '@/lib/hooks'
+import { locale } from '@/lib/i18n'
 import type { Project } from '@/types/github-repo'
 import type { Translations } from '@/types/translations'
 import { NavArrowDown } from 'iconoir-react'
@@ -65,8 +66,7 @@ export const ProjectsCarousel = ({ t, projects }: { t: Translations; projects: P
     project: {
       id,
       name,
-      description,
-      metadata: { primary_image },
+      metadata: { primary_image, description },
     },
   }: {
     project: Project
@@ -79,8 +79,11 @@ export const ProjectsCarousel = ({ t, projects }: { t: Translations; projects: P
           className="absolute inset-0 size-full object-cover object-top-left"
         />
         <footer className="bg-popover/80 text-card-foreground relative inset-0 mt-auto flex h-fit min-h-2/3 flex-col justify-center gap-2 border-l p-4 sm:absolute sm:ml-auto sm:h-auto sm:min-h-auto sm:w-2/3 sm:p-8 lg:p-12">
-          <h2 class="title-secondary">{name}</h2>
-          <p className="line-clamp-3" dangerouslySetInnerHTML={{ __html: description }} />
+          <h2 class="title-secondary capitalize">{name.split('-').join(' ')}</h2>
+          <p
+            className="line-clamp-3"
+            dangerouslySetInnerHTML={{ __html: description[locale.value] }}
+          />
           <Link href={`#${id}`} size="sm" className="group relative self-start">
             {t.buttons.show_more}
             <NavArrowDown className="text-primary group-hover:animate-in group-hover:fade-in-0 group-hover:slide-in-from-top-50 absolute inset-x-0 top-full mx-auto size-4 opacity-0 duration-200 group-hover:opacity-100" />

@@ -15,6 +15,7 @@ export type Translations = {
     title: string
   }
   buttons: {
+    other: string
     show_more: string
     view_projects: string
     open_project: string
