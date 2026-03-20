@@ -1,15 +1,19 @@
-import type { Locale } from '@/types/locale'
 import Cookies from 'js-cookie'
 
-export const defaultLocale: Locale = 'pt-br'
+const LOCALES = ['pt-br', 'en', 'es'] as const
 
-export const languages: Record<Locale, string> = {
+type Locale = (typeof LOCALES)[number]
+
+const DEFAULT_LOCALE: Locale = 'pt-br'
+
+const languages: Record<Locale, string> = {
   'pt-br': 'Português',
   en: 'English',
   es: 'Español',
 }
-export const locales = Object.keys(languages) as Locale[]
 
-export function setLanguageCookie(data: string) {
-  Cookies.set('language', data, { expires: 30, path: '/' })
+function setLanguageCookie(locale: Locale) {
+  Cookies.set('language', locale, { expires: 30, path: '/' })
 }
+
+export { DEFAULT_LOCALE, LOCALES, languages, setLanguageCookie, type Locale }

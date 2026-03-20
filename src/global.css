@@ -833,7 +833,7 @@
     --sidebar-ring: oklch(0.75 0.35 270);
   }
   * {
-    @apply border-border;
+    @apply border-border outline-none;
   }
   body {
     @apply bg-background text-foreground mb-16 text-base font-extralight transition-[background-color] lg:mb-28;

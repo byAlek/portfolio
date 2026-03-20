@@ -1,7 +1,8 @@
 import { useRef, useState } from 'preact/hooks'
 
+import { Copy } from '@/components/ui/icons'
 import type { VariantProps } from 'class-variance-authority'
-import { Check, Copy } from 'iconoir-react'
+import { Check } from 'iconoir-react'
 import { Button, buttonVariants } from './button'
 
 export function Clipboard({

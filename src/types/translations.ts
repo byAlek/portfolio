@@ -1,27 +1,26 @@
-type Project = {
-  description: string
-  description_2: string
-  comment?: string
-}
-type Projects = { [key: string]: Project }
-
 export type Translations = {
-  projects: Projects
-  section_1: {
+  home: {
     description: string
   }
-  section_2: {
+  about: {
     title: string
-    subtitle: string
-    subtitle_2: string
+    subtitle_primary: string
+    subtitle_secondary: string
     description: string
   }
-  button: {
+  projects: {
+    title: string
+  }
+  contact: {
+    title: string
+  }
+  buttons: {
     show_more: string
-    projects: string
+    view_projects: string
+    open_project: string
+    view_source: string
+    view_live: string
     contact: string
-    go_to_projects: string
-    go_to_code: string
-    go_to_website: string
+    open_image_gallery: string
   }
 }

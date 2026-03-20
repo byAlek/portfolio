@@ -11,7 +11,7 @@ import { Particles } from './ui/particles'
   <div
     transition:animate="none"
     class:list={[
-      'fixed inset-0 -z-300 overflow-hidden opacity-7 blur-3xl *:absolute md:opacity-10',
+      'fixed inset-0 -z-300 overflow-hidden opacity-5 blur-3xl *:absolute',
       '*:bg-primary *:rounded-full',
     ]}
   >
@@ -22,10 +22,10 @@ import { Particles } from './ui/particles'
   </div>
   <Particles
     transition:animate="none"
-    client:visible
-    quantity={30}
-    size={10}
-    className="text-primary fixed inset-0 -z-200 overflow-hidden opacity-70"
+    client:only="preact"
+    quantity={15}
+    size={20}
+    className="text-primary fixed inset-0 -z-200 overflow-hidden opacity-30"
   />
 </div>
 
@@ -33,6 +33,6 @@ import { Particles } from './ui/particles'
   document.addEventListener('astro:page-load', () => {
     setTimeout(() => {
       document.querySelector<HTMLDivElement>('.background')!.dataset.isMounted = ''
-    }, 1100)
+    }, 1050)
   })
 </script>

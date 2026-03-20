@@ -3,10 +3,10 @@ export const HalfCircle = ({ className = '' }: { className?: string }) => (
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="currentColor"
     stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
+    stroke="currentColor"
     className={className}
   >
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />

@@ -12,7 +12,7 @@ import { Dots, HalfCircle } from '@/components/ui/icons'
 import { Link } from '@/components/ui/link'
 import { Modal } from '@/components/ui/modal'
 import { useMediaQuery } from '@/lib/hooks'
-import { languages, setLanguageCookie } from '@/lib/i18n'
+import { languages, setLanguageCookie, type Locale } from '@/lib/i18n'
 import { COLORS, getMode, themeColor, themeMode, toggleMode } from '@/lib/theme'
 import { c } from '@/lib/utils'
 import { Circle, HalfMoon, SunLight } from 'iconoir-react'
@@ -113,7 +113,7 @@ export const HeaderButtons = ({ locale }: { locale: string }) => {
                     variant="outline"
                     className={locale === key ? 'ring-4' : ''}
                   >
-                    <a href={`/${key}`} onClick={() => setLanguageCookie(key)}>
+                    <a href={`/${key}`} onClick={() => setLanguageCookie(key as Locale)}>
                       {value}
                     </a>
                   </Button>
@@ -169,7 +169,7 @@ export const HeaderButtons = ({ locale }: { locale: string }) => {
         {isMounted && lg && (
           <DropdownMenuContent>
             {Object.entries(languages).map(([key, value]) => (
-              <DropdownMenuItem key={key} asChild onSelect={() => setLanguageCookie(key)}>
+              <DropdownMenuItem key={key} asChild onSelect={() => setLanguageCookie(key as Locale)}>
                 <Link variant="ghost" href={`/${key}`} className={locale === key ? 'ring-4' : ''}>
                   {value}
                 </Link>

@@ -1,3 +1,6 @@
+export * from './chat'
+export * from './copy'
 export * from './dots'
 export * from './half-circle'
 export * from './linkedin'
+export * from './map-pin'

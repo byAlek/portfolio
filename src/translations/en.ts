@@ -1,33 +1,29 @@
 import type { Translations } from '@/types/translations'
 
-const bi = (x: string) => `<b><i>${x}</i></b>`
-
-const projects: Translations['projects'] = {
-  foodeli: {
-    description:
-      'Landing page for a fast food restaurant, built with Next.js using APIs to display dynamic data.',
-    description_2: 'Fast, responsive, and intuitive.',
-  },
-}
-
 export const en: Translations = {
-  projects,
-  section_1: {
+  home: {
     description:
       'Front-End Developer with over 1 year of studying various technologies, always seeking to learn, evolve and contribute to projects that challenge my capabilities.',
   },
-  section_2: {
+  about: {
     title: 'About me',
-    subtitle: `Hello, my name is Alex, I'm a ${bi('Front-end')} developer.`,
-    subtitle_2: 'Over 2 years of experience.',
-    description: `Some of my typical ${bi('favorite')} technologies/tools or that I've ${bi('worked')} with.`,
+    subtitle_primary: `Hello, my name is Alex, I'm a ***Front-end*** developer.`,
+    subtitle_secondary: 'Over 2 years of experience.',
+    description: `Some of my typical ***favorite*** technologies/tools or that I've ***worked*** with.`,
   },
-  button: {
+  projects: {
+    title: 'Projects',
+  },
+  contact: {
+    title: 'Contact',
+  },
+  buttons: {
     show_more: 'Show more',
-    projects: 'Projects',
+    view_projects: 'View projects',
+    open_project: 'Open project',
+    view_source: 'Code',
+    view_live: 'Website',
     contact: 'Contact',
-    go_to_projects: 'View projects',
-    go_to_code: 'Code',
-    go_to_website: 'Website',
+    open_image_gallery: 'Open image gallery',
   },
 }

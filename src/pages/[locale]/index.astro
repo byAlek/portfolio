@@ -1,25 +1,92 @@
 ---
+import { InnerHTML } from '@/components/inner-html'
 import { ProjectModal } from '@/components/project-modal'
 import { ProjectsCarousel } from '@/components/projects-carousel'
 import { Clipboard } from '@/components/ui/clipboard'
-import { Linkedin } from '@/components/ui/icons'
+import { Heading } from '@/components/ui/heading'
+import { Chat, Linkedin, MapPin } from '@/components/ui/icons'
 import { Link } from '@/components/ui/link'
-import { Title } from '@/components/ui/title'
 import { EMAIL, LOCATION, PHONE, SOCIALS } from '@/constants/common'
-import { PROJECTS } from '@/constants/projects'
-import { SKILLS_BACK_END, SKILLS_FRONT_END, SKILLS_STYLES } from '@/constants/skills'
+import { allTechnologies, technologies } from '@/constants/technologies'
 import Layout from '@/layouts/layout.astro'
-import { defaultLocale } from '@/lib/i18n'
+import { DEFAULT_LOCALE, LOCALES, type Locale } from '@/lib/i18n'
+import type { GithubRepo, Project, ProjectConfig } from '@/types/github-repo'
 import type { Translations } from '@/types/translations'
-import { Code, Github, Internet, Mail, MapPin, NavArrowDown, Phone } from 'iconoir-react'
+import {
+  Code,
+  Github,
+  Globe,
+  MailSolid,
+  NavArrowDown,
+  PhoneSolid,
+  SendDiagonalSolid,
+} from 'iconoir-react'
+import { Octokit } from 'octokit'
 
-const locale = Astro.params.locale || defaultLocale
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({
+    params: { locale },
+  }))
+}
 
+const locale = (Astro.currentLocale || DEFAULT_LOCALE) as Locale
 const translations = await import(`../../translations/${locale}.ts`)
 const t = translations[locale.replace('-', '_')] as Translations
+
+const octokit = new Octokit({
+  auth: import.meta.env.GITHUB_TOKEN,
+})
+
+const response = await octokit.request('GET /users/byAlek/repos')
+const data = response.data as GithubRepo[]
+
+const projects: Project[] = (
+  await Promise.all(
+    data.map(async (repo) => {
+      try {
+        const metadataRes = await octokit.request(`GET /repos/${repo.full_name}/contents/metadata`)
+
+        const metadata = (await metadataRes.data) as {
+          name: string
+          download_url: string
+        }[]
+
+        if (!Array.isArray(metadata)) return null
+
+        const configFile = metadata.find((i) => i.name === 'config.json')
+        const primaryFile = metadata.find((i) => i.name.includes('primary'))
+
+        if (!configFile || !primaryFile) return null
+
+        const config = (await (await fetch(configFile.download_url)).json()) as ProjectConfig
+        const images = metadata
+          .filter((i) => i.name !== 'config.json' && !i.name.includes('primary'))
+          .map((i) => ({
+            src: i.download_url,
+            alt: i.name,
+          }))
+        const primaryImage = {
+          src: primaryFile.download_url,
+          alt: primaryFile.name,
+        }
+
+        return {
+          ...repo,
+          metadata: {
+            ...config,
+            primary_image: primaryImage,
+            images: [primaryImage, ...images],
+          },
+        }
+      } catch {
+        return null
+      }
+    })
+  )
+).filter(Boolean) as Project[]
 ---
 
-<Layout title="ga" class="space-y-16 lg:space-y-28" t={t}>
+<Layout title="Alex Developer" class="space-y-16 lg:space-y-28" t={t}>
   <section class="layout min-h-svh content-center space-y-8 pt-22 pb-4 lg:pt-24">
     <h2 class="title relative sm:hidden">Alex Dev</h2>
     <h1 class="title-primary md:hidden">Front-end Developer</h1>
@@ -27,7 +94,7 @@ const t = translations[locale.replace('-', '_')] as Translations
     <div class="flex items-center justify-between gap-4 gap-x-20">
       <h1 class="title-primary hidden md:block">Front-end</h1>
       <Link size="xl" className="group relative flex md:grow lg:max-w-3/10" href="#projects">
-        {t.button.go_to_projects}
+        {t.buttons.view_projects}
         <NavArrowDown
           className="text-primary group-hover:animate-in group-hover:fade-in-0 group-hover:slide-in-from-top-50 absolute inset-x-0 top-full mx-auto size-6 opacity-0 duration-200 group-hover:opacity-100"
         />
@@ -35,7 +102,9 @@ const t = translations[locale.replace('-', '_')] as Translations
     </div>
 
     <div class="flex items-center justify-between gap-4 text-balance">
-      <p set:html={t.section_1.description} />
+      <p>
+        <InnerHTML content={t.home.description} />
+      </p>
       <h2 class="title-primary hidden md:block">Developer</h2>
     </div>
 
@@ -61,23 +130,27 @@ const t = translations[locale.replace('-', '_')] as Translations
   </section>
 
   <section id="carousel">
-    <ProjectsCarousel client:load t={t} />
+    <ProjectsCarousel client:load t={t} projects={projects} />
   </section>
 
   <section class="layout space-y-4 md:space-y-8">
     <header>
-      <Title render="h2" className="mb-2">
-        {t.section_2.title}
-      </Title>
-      <p set:html={t.section_2.subtitle} />
-      <p set:html={t.section_2.subtitle_2} />
+      <Heading render="h2" className="mb-2">
+        <InnerHTML content={t.about.title} />
+      </Heading>
+      <p>
+        <InnerHTML content={t.about.subtitle_primary} />
+      </p>
+      <p>
+        <InnerHTML content={t.about.subtitle_secondary} />
+      </p>
     </header>
     <div class="flex gap-4 lg:gap-8">
       <ul class="space-y-4 md:w-2/3 lg:space-y-8">
         <li class="card">
           <h3 class="title">Front-end</h3>
           <p class="text-sm font-semibold">
-            {SKILLS_FRONT_END.join(' / ')}
+            {Object.values(technologies.frontend).join(' / ')}
           </p>
         </li>
 
@@ -85,7 +158,7 @@ const t = translations[locale.replace('-', '_')] as Translations
           <div class="card grow md:max-w-2/3">
             <h3 class="title">Styles</h3>
             <p class="text-sm font-semibold">
-              {SKILLS_STYLES.join(' / ')}
+              {Object.values(technologies.frontend).join(' / ')}
             </p>
           </div>
 
@@ -97,11 +170,13 @@ const t = translations[locale.replace('-', '_')] as Translations
         <li class="card lg:max-w-8/10">
           <h3 class="title">Back-end</h3>
           <p class="text-sm font-semibold">
-            {SKILLS_BACK_END.join(' / ')}
+            {Object.values(technologies.backend).join(' / ')}
           </p>
         </li>
 
-        <p set:html={t.section_2.description} class="max-w-lg" />
+        <p class="max-w-lg">
+          <InnerHTML content={t.about.description} />
+        </p>
       </ul>
 
       <div class="bg-primary hidden flex-1 items-center justify-center rounded-4xl md:flex">
@@ -111,33 +186,47 @@ const t = translations[locale.replace('-', '_')] as Translations
   </section>
 
   <section id="projects" class="layout space-y-4 md:space-y-8">
-    <Title render="h2">
-      {t.button.projects}
-    </Title>
+    <Heading render="h2">
+      <InnerHTML content={t.projects.title} />
+    </Heading>
     <div class="flex flex-col gap-24">
       {
-        PROJECTS(t.projects).map((project, i) => (
+        projects.map(({ id, metadata, ...project }, i) => (
           <article
-            id={project.id}
+            id={String(id)}
             class="flex w-full flex-wrap gap-4 pt-4 md:flex-nowrap md:even:*:data-even-child:order-first lg:gap-8"
           >
             <header class="space-y-2 md:hidden">
-              <h2 class="title">{project.name}</h2>
+              <h2 class="title">
+                <InnerHTML content={project.name} />
+              </h2>
+              <div class="space-y-1">
+                <p>
+                  <InnerHTML content={metadata.description[locale]} />
+                </p>
+                {metadata.comment && (
+                  <p>
+                    <InnerHTML content={metadata.comment[locale]} />
+                  </p>
+                )}
+              </div>
               <ul class="flex flex-wrap gap-2">
-                {project.skills_used.map((skill) => (
-                  <li>
-                    <p class="rounded-full border px-3 py-1 text-xs font-semibold">{skill}</p>
-                  </li>
-                ))}
+                {Object.values(metadata.technologies || {}).map((tech) =>
+                  tech.map(
+                    (t) =>
+                      allTechnologies[t] && (
+                        <li>
+                          <p class="rounded-full border px-3 py-1 text-xs font-semibold">
+                            {allTechnologies[t]}
+                          </p>
+                        </li>
+                      )
+                  )
+                )}
               </ul>
             </header>
-            <div class="space-y-1 md:hidden">
-              <p set:html={project.description} />
-              {project.description_2 && <p set:html={project.description_2} />}
-              {project.comment && <p set:html={project.comment} />}
-            </div>
 
-            <ProjectModal client:visible project={project} />
+            <ProjectModal client:load project={projects[i]} />
 
             <div
               data-even-child
@@ -145,35 +234,47 @@ const t = translations[locale.replace('-', '_')] as Translations
             >
               <header class="hidden space-y-2 md:block">
                 <h2 class="title">{project.name}</h2>
+                <div class="space-y-1">
+                  <p>
+                    <InnerHTML content={metadata.description?.[locale]} />
+                  </p>
+                  {metadata.comment && (
+                    <p>
+                      <InnerHTML content={metadata.comment[locale]} />
+                    </p>
+                  )}
+                </div>
                 <ul class="flex flex-wrap gap-2">
-                  {project.skills_used.map((skill) => (
-                    <li>
-                      <p class="rounded-full border px-3 py-1 text-xs font-semibold">{skill}</p>
-                    </li>
-                  ))}
+                  {Object.values(metadata.technologies || {}).map((tech) =>
+                    tech.map(
+                      (t) =>
+                        allTechnologies[t] && (
+                          <li>
+                            <p class="rounded-full border px-3 py-1 text-xs font-semibold">
+                              {allTechnologies[t]}
+                            </p>
+                          </li>
+                        )
+                    )
+                  )}
                 </ul>
               </header>
-              <div class="hidden space-y-1 md:block">
-                <p set:html={project.description} />
-                {project.description_2 && <p set:html={project.description_2} />}
-                {project.comment && <p set:html={project.comment} />}
-              </div>
               <footer class="flex gap-4 *:basis-2/10">
-                {project.repo && (
+                {project.html_url && (
                   <Link
                     variant="outline"
-                    href={project.repo}
+                    href={project.html_url}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {t.button.go_to_code}
+                    {t.buttons.view_source}
                     <Code class="size-5" />
                   </Link>
                 )}
-                {project.link && (
-                  <Link href={project.link} target="_blank" rel="noopener noreferrer">
-                    {t.button.go_to_website}
-                    <Internet />
+                {project.homepage && (
+                  <Link href={project.homepage} target="_blank" rel="noopener noreferrer">
+                    {t.buttons.view_live}
+                    <Globe class="size-5" />
                   </Link>
                 )}
               </footer>
@@ -186,17 +287,39 @@ const t = translations[locale.replace('-', '_')] as Translations
 
   <section id="contact" class="layout grid gap-x-4 gap-y-8 py-4 sm:grid-cols-2">
     <div class="space-y-4">
-      <Title render="h2">{t.button.contact}</Title>
-      <div class="*:flex *:items-center *:gap-2">
+      <Heading render="h2">
+        <InnerHTML content={t.contact.title} />
+      </Heading>
+      <div class="w-fit *:flex *:items-center *:gap-2">
         <div class="group/clipboard-button">
-          <Mail />
+          <MailSolid />
           <p class="cursor-default select-all">{EMAIL}</p>
-          <Clipboard valueToCopy={EMAIL} client:visible />
+          <Clipboard valueToCopy={EMAIL} client:load />
+          <Link
+            variant="ghost"
+            size="icon-sm"
+            className="group-hover/clipboard-button:opacity-100 hover:opacity-100 focus:opacity-100 lg:opacity-0"
+            href={`mailto:${EMAIL}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <SendDiagonalSolid />
+          </Link>
         </div>
         <div class="group/clipboard-button">
-          <Phone />
+          <PhoneSolid />
           <p class="cursor-default select-all">{PHONE}</p>
-          <Clipboard valueToCopy={PHONE} client:visible />
+          <Clipboard valueToCopy={PHONE} client:load />
+          <Link
+            variant="ghost"
+            size="icon-sm"
+            className="group-hover/clipboard-button:opacity-100 hover:opacity-100 focus:opacity-100 lg:opacity-0"
+            href={SOCIALS.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Chat />
+          </Link>
         </div>
         <div>
           <MapPin />

@@ -22,26 +22,23 @@ const { class: c } = Astro.props
 <script>
   import throttle from 'lodash.throttle'
 
-  function init() {
+  let lastScroll = 0
+
+  function onScroll() {
     const header = document.getElementById('header')
 
-    let lastScroll = 0
+    if (!header) return
 
-    function onScroll() {
-      if (!header) return
+    const currentScroll = window.pageYOffset
 
-      const currentScroll = window.pageYOffset
+    header.dataset.onTop = String(currentScroll === 0)
 
-      header.dataset.onTop = String(currentScroll === 0)
+    if (currentScroll > 500) header.dataset.visible = String(currentScroll < lastScroll)
+    else header.dataset.visible = 'true'
 
-      if (currentScroll > 500) header.dataset.visible = String(currentScroll < lastScroll)
-      else header.dataset.visible = 'true'
-
-      lastScroll = currentScroll
-    }
-    const throttledScroll = throttle(onScroll, 50)
-
-    window.addEventListener('scroll', throttledScroll, { passive: true })
+    lastScroll = currentScroll
   }
-  document.addEventListener('astro:page-load', () => init())
+  const throttledScroll = throttle(onScroll, 50)
+
+  window.addEventListener('scroll', throttledScroll, { passive: true })
 </script>

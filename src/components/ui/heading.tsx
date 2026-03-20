@@ -1,6 +1,6 @@
 import type { ComponentChildren } from 'preact'
 
-export const Title = ({
+export const Heading = ({
   variant = 1,
   className = '',
   render: Comp,

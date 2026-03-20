@@ -147,7 +147,7 @@
               "sass",
               "postcss",
               "mui",
-              "tailwind",
+              "tailwindcss",
               "styled",
               "framerMotion"
             ],
@@ -161,7 +161,9 @@
   },
   "required": [
     "project_type",
-    "status"
+    "status",
+    "description",
+    "featured"
   ],
   "type": "object"
 }
