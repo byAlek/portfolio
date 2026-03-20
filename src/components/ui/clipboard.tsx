@@ -30,6 +30,7 @@ export function Clipboard({
       onClick={copyToClipboard}
       size={size}
       variant={variant}
+      title="Copy"
       className={`group-hover/clipboard-button:opacity-100 hover:opacity-100 focus:opacity-100 ${!isCopied ? 'lg:opacity-0' : ''}`.trim()}
     >
       {isCopied ? (
